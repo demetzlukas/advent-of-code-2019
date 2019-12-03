@@ -60,7 +60,7 @@ class Wire {
     stepsUntil(point: number[]): number {
         let [pX, pY] = point;
         let counter = 0;
-        // why do I get wrong results with a forEach loop?
+
         for (const [x, y] of this.coordinates) {
             if (x === pX && y === pY) return counter;
             counter++;
