@@ -1,14 +1,14 @@
 {
-    "name": "advent-of-code",
+    "name": "advent-of-code-2019",
     "version": "1.0.0",
-    "description": "",
+    "description": "Advent of Code Challenge 2019",
     "main": "index.js",
     "scripts": {
         "start": "ts-node ./src/index.ts",
-        "run": "node -r esm ./bin/index.js"
+        "run": "tsc && node -r esm ./bin/index.js"
     },
     "keywords": [],
-    "author": "",
+    "author": "Lukas Demetz",
     "license": "ISC",
     "devDependencies": {
         "@types/node": "^12.12.14",
