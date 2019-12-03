@@ -56,6 +56,18 @@ class Wire {
 
         return intersects.slice(1);
     }
+
+    stepsUntil(point: number[]): number {
+        let [pX, pY] = point;
+        let counter = 0;
+        // why do I get wrong results with a forEach loop?
+        for (const [x, y] of this.coordinates) {
+            if (x === pX && y === pY) return counter;
+            counter++;
+        }
+
+        return -1;
+    }
 }
 
 export async function main() {
@@ -73,8 +85,17 @@ export async function main() {
         intersects
     ).reduce((min, value) => (value.distance < min.distance ? value : min));
 
-    console.log(closesPoint.distance);
+    console.log(`Part 1: ${closesPoint.distance}`);
     // 5319
+
+    let minimumSteps = intersects
+        .map(
+            intersect =>
+                wire1.stepsUntil(intersect) + wire2.stepsUntil(intersect)
+        )
+        .reduce((min, value) => Math.min(min, value));
+
+    console.log(`Part2: ${minimumSteps}`);
 }
 
 function calculateManhattenDistances(origin: number[], points: number[][]) {
