@@ -14,9 +14,9 @@ export async function main() {
         while (verb < 100) {
             if (calculate(array.slice(), noun, verb) == 19690720) {
                 console.log(
-                    `Part 2: noun = ${noun}, verb = ${verb}, 100 * noun + verb = ${100 *
-                        noun +
-                        verb}`
+                    `Part 2: noun = ${noun},`,
+                    `verb = ${verb},`,
+                    `100 * noun + verb = ${100 * noun + verb}`
                 );
                 break;
             }
