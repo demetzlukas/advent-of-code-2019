@@ -38,8 +38,9 @@ function getAdjacentBlocks(digit: number): number[][] {
         let pair = [];
         pair.push(lastChar);
 
-        while (lastChar == (currentChar = digitsAsStringArray.shift()))
+        while (lastChar == (currentChar = digitsAsStringArray.shift())) {
             pair.push(currentChar);
+        }
 
         lastChar = currentChar;
         adjacentBlocks.push(pair);
