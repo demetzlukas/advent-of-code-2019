@@ -54,7 +54,7 @@ function getNumberAsStringArray(digit: number): string[] {
 }
 
 function isPasswordPart1(digit: number): boolean {
-    return containsAdjacentPairs(digit) && isIncreasing(digit);
+    return isIncreasing(digit) && containsAdjacentPairs(digit);
 }
 
 function isPasswordPart2(digit: number): boolean {
