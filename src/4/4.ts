@@ -25,13 +25,7 @@ export function main() {
 }
 
 function containsAdjacentPairs(digit: number): boolean {
-    let digitsAsStringArray = getNumberAsStringArray(digit);
-
-    for (let i = 1; i < digitsAsStringArray.length; i++) {
-        if (digitsAsStringArray[i - 1] == digitsAsStringArray[i]) return true;
-    }
-
-    return false;
+    return getAdjacentIdenticals(digit).filter(i => i.length > 1).length > 0;
 }
 
 function getAdjacentIdenticals(digit: number): number[][] {
@@ -66,12 +60,11 @@ function isPasswordPart1(digit: number): boolean {
 function isPasswordPart2(digit: number): boolean {
     if (!isIncreasing(digit)) return false;
     let identicals = getAdjacentIdenticals(digit);
-    // no pairs
+
     if (identicals.length == 0) return false;
-    if (identicals.length > 1) {
-        for (const identical of identicals) {
-            if (identical.length == 2) return true;
-        }
+
+    for (const identical of identicals) {
+        if (identical.length == 2) return true;
     }
 
     return false;
