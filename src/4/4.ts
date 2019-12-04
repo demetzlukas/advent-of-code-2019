@@ -25,28 +25,27 @@ export function main() {
 }
 
 function containsAdjacentPairs(digit: number): boolean {
-    return getAdjacentIdenticals(digit).filter(i => i.length > 1).length > 0;
+    return getAdjacentBlocks(digit).filter(i => i.length > 1).length > 0;
 }
 
-function getAdjacentIdenticals(digit: number): number[][] {
+function getAdjacentBlocks(digit: number): number[][] {
     let digitsAsStringArray = getNumberAsStringArray(digit);
-    let identicals = [];
-    let lastCharacter = digitsAsStringArray.shift();
-    let currentCharacter = '';
+    let adjacentBlocks: number[][] = [];
+    let lastChar = digitsAsStringArray.shift();
+    let currentChar: string;
 
     while (digitsAsStringArray.length > 0) {
         let pair = [];
-        pair.push(lastCharacter);
-        currentCharacter = digitsAsStringArray.shift();
-        while (lastCharacter == currentCharacter) {
-            pair.push(currentCharacter);
-            currentCharacter = digitsAsStringArray.shift();
-        }
-        lastCharacter = currentCharacter;
-        identicals.push(pair);
+        pair.push(lastChar);
+
+        while (lastChar == (currentChar = digitsAsStringArray.shift()))
+            pair.push(currentChar);
+
+        lastChar = currentChar;
+        adjacentBlocks.push(pair);
     }
 
-    return identicals;
+    return adjacentBlocks;
 }
 
 function getNumberAsStringArray(digit: number): string[] {
@@ -59,12 +58,10 @@ function isPasswordPart1(digit: number): boolean {
 
 function isPasswordPart2(digit: number): boolean {
     if (!isIncreasing(digit)) return false;
-    let identicals = getAdjacentIdenticals(digit);
+    let adjacentBlocks = getAdjacentBlocks(digit);
 
-    if (identicals.length == 0) return false;
-
-    for (const identical of identicals) {
-        if (identical.length == 2) return true;
+    for (const block of adjacentBlocks) {
+        if (block.length == 2) return true;
     }
 
     return false;
