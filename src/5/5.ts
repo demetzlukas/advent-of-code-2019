@@ -2,8 +2,7 @@ import { readFileFromInput } from '../utils/readFile';
 import * as readLineSync from 'readline-sync';
 
 const fileName = './input/5.txt';
-let opCounter: number;
-let inputParameter: number = 5;
+let opCounter: number = 0;
 
 export async function main() {
     let input = await readFileFromInput(fileName);
@@ -53,10 +52,11 @@ function getOperation(array: number[]): number[] {
         case 99:
             break;
         default:
-            let opCodeAsString = `${array[opCounter++]}`.padStart(4, '0');
+            let opCodeAsString = `${array[opCounter++]}`.padStart(5, '0');
             let opCode = parseInt(opCodeAsString.slice(-2));
-            let parameterModeFirst = !parseInt(opCodeAsString.slice(-3, -2));
-            let parameterModeSecond = !parseInt(opCodeAsString.slice(-4, -3));
+            let positionModeFirst = !parseInt(opCodeAsString.slice(-3, -2));
+            let positionModeSecond = !parseInt(opCodeAsString.slice(-4, -3));
+            let positionModeThird = !parseInt(opCodeAsString.slice(-5, -4));
             let first: number, second: number, third: number;
 
             switch (opCode) {
@@ -64,35 +64,31 @@ function getOperation(array: number[]): number[] {
                 case 2:
                 case 7:
                 case 8:
-                    first = parameterModeFirst
-                        ? array[array[opCounter++]]
-                        : array[opCounter++];
-                    second = parameterModeSecond
-                        ? array[array[opCounter++]]
-                        : array[opCounter++];
-                    third = array[opCounter++];
+                    first = getParameter(array, positionModeFirst);
+                    second = getParameter(array, positionModeSecond);
+                    third = positionModeThird
+                        ? array[opCounter++]
+                        : opCounter++;
                     break;
                 case 4:
-                    first = parameterModeFirst
-                        ? array[array[opCounter++]]
-                        : array[opCounter++];
+                    first = getParameter(array, positionModeFirst);
                     break;
                 case 5:
                 case 6:
-                    first = parameterModeFirst
-                        ? array[array[opCounter++]]
-                        : array[opCounter++];
-                    second = parameterModeSecond
-                        ? array[array[opCounter++]]
-                        : array[opCounter++];
+                    first = getParameter(array, positionModeFirst);
+                    second = getParameter(array, positionModeSecond);
                     break;
                 default:
-                    throw new Error('error');
+                    throw new Error('Unknown op code ' + opCode);
             }
 
             result = [opCode, first, second, third];
     }
     return result;
+}
+
+function getParameter(array: number[], positionMode: boolean): number {
+    return positionMode ? array[array[opCounter++]] : array[opCounter++];
 }
 
 function execute(array: number[], operation: number[]): void {
