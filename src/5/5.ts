@@ -30,32 +30,26 @@ function getOperation(array: number[]): number[] {
     let positionModeThird = !parseInt(opCodeAsString.slice(-5, -4));
 
     result.push(opCode);
+    // we always have at least one parameter
+    result.push(getParameter(array, positionModeFirst));
+
     switch (opCode) {
         case 1:
         case 2:
         case 7:
         case 8:
-            result.push(getParameter(array, positionModeFirst));
             result.push(getParameter(array, positionModeSecond));
-            result.push(positionModeThird ? array[opCounter++] : opCounter++);
-
+            result.push(getParameter(array, positionModeThird));
             break;
         case 3:
-            result.push(array[opCounter++]);
-            break;
         case 4:
-            result.push(getParameter(array, positionModeFirst));
-
             break;
         case 5:
         case 6:
-            result.push(getParameter(array, positionModeFirst));
             result.push(getParameter(array, positionModeSecond));
-
             break;
         case 99:
             result = null;
-
             break;
         default:
             throw new Error('Unknown op code ' + opCode);
@@ -65,7 +59,7 @@ function getOperation(array: number[]): number[] {
 }
 
 function getParameter(array: number[], positionMode: boolean): number {
-    return positionMode ? array[array[opCounter++]] : array[opCounter++];
+    return positionMode ? array[opCounter++] : opCounter++;
 }
 
 function execute(array: number[], operation: number[]): void {
@@ -74,28 +68,28 @@ function execute(array: number[], operation: number[]): void {
         case undefined:
             break;
         case 1:
-            array[third] = first + second;
+            array[third] = array[first] + array[second];
             break;
         case 2:
-            array[third] = first * second;
+            array[third] = array[first] * array[second];
             break;
         case 3:
             array[first] = parseInt(readLineSync.question('Input: '));
             break;
         case 4:
-            console.log('Output:', first);
+            console.log('Output:', array[first]);
             break;
         case 5:
-            if (first != 0) opCounter = second;
+            if (array[first] != 0) opCounter = array[second];
             break;
         case 6:
-            if (first == 0) opCounter = second;
+            if (array[first] == 0) opCounter = array[second];
             break;
         case 7:
-            array[third] = first < second ? 1 : 0;
+            array[third] = array[first] < array[second] ? 1 : 0;
             break;
         case 8:
-            array[third] = first == second ? 1 : 0;
+            array[third] = array[first] == array[second] ? 1 : 0;
             break;
         default:
             throw new Error('Unknown op code ' + opCode);
