@@ -22,34 +22,38 @@ function getResult(array: number[]): number {
 }
 
 function getOperation(array: number[]): number[] {
-    let result: number[] = null;
+    let result: number[] = [];
     switch (array[opCounter]) {
         case 1:
         case 2:
         case 7:
         case 8:
-            result = [
-                array[opCounter++],
-                array[array[opCounter++]],
-                array[array[opCounter++]],
-                array[opCounter++],
-            ];
+            result.push(array[opCounter++]);
+            result.push(array[array[opCounter++]]);
+            result.push(array[array[opCounter++]]);
+            result.push(array[opCounter++]);
+
             break;
         case 3:
-            result = [array[opCounter++], array[opCounter++]];
+            result.push(array[opCounter++]);
+            result.push(array[opCounter++]);
+
             break;
         case 4:
-            result = [array[opCounter++], array[array[opCounter++]]];
+            result.push(array[opCounter++]);
+            result.push(array[array[opCounter++]]);
+
             break;
         case 5:
         case 6:
-            result = [
-                array[opCounter++],
-                array[array[opCounter++]],
-                array[array[opCounter++]],
-            ];
+            result.push(array[opCounter++]);
+            result.push(array[array[opCounter++]]);
+            result.push(array[array[opCounter++]]);
+
             break;
         case 99:
+            result = null;
+
             break;
         default:
             let opCodeAsString = `${array[opCounter++]}`.padStart(5, '0');
@@ -57,32 +61,36 @@ function getOperation(array: number[]): number[] {
             let positionModeFirst = !parseInt(opCodeAsString.slice(-3, -2));
             let positionModeSecond = !parseInt(opCodeAsString.slice(-4, -3));
             let positionModeThird = !parseInt(opCodeAsString.slice(-5, -4));
-            let first: number, second: number, third: number;
+            // let first: number, second: number, third: number;
 
+            result.push(opCode);
             switch (opCode) {
                 case 1:
                 case 2:
                 case 7:
                 case 8:
-                    first = getParameter(array, positionModeFirst);
-                    second = getParameter(array, positionModeSecond);
-                    third = positionModeThird
-                        ? array[opCounter++]
-                        : opCounter++;
+                    result.push(getParameter(array, positionModeFirst));
+                    result.push(getParameter(array, positionModeSecond));
+                    result.push(
+                        positionModeThird ? array[opCounter++] : opCounter++
+                    );
+
                     break;
                 case 4:
-                    first = getParameter(array, positionModeFirst);
+                    result.push(getParameter(array, positionModeFirst));
+
                     break;
                 case 5:
                 case 6:
-                    first = getParameter(array, positionModeFirst);
-                    second = getParameter(array, positionModeSecond);
+                    result.push(getParameter(array, positionModeFirst));
+                    result.push(getParameter(array, positionModeSecond));
+
                     break;
                 default:
                     throw new Error('Unknown op code ' + opCode);
             }
 
-            result = [opCode, first, second, third];
+        // result = [opCode, first, second, third];
     }
     return result;
 }
