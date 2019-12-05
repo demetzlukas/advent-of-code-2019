@@ -65,8 +65,6 @@ function getParameter(array: number[], positionMode: boolean): number {
 function execute(array: number[], operation: number[]): void {
     let [opCode, first, second, third] = operation;
     switch (opCode) {
-        case undefined:
-            break;
         case 1:
             array[third] = array[first] + array[second];
             break;
