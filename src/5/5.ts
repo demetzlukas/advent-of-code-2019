@@ -98,6 +98,6 @@ function execute(array: number[], operation: number[]): void {
             array[third] = first == second ? 1 : 0;
             break;
         default:
-            throw new Error(opCode + ' unknown operation');
+            throw new Error('Unknown op code ' + opCode);
     }
 }
