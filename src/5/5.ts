@@ -1,8 +1,9 @@
 import { readFileFromInput } from '../utils/readFile';
+import * as readLineSync from 'readline-sync';
 
 const fileName = './input/5.txt';
 let opCounter: number;
-let inputParameter: number = 1;
+let inputParameter: number = 5;
 
 export async function main() {
     let input = await readFileFromInput(fileName);
@@ -12,21 +13,9 @@ export async function main() {
     getResult(array);
 }
 
-function calculate(array: number[], noun: number, verb: number): number {
-    opCounter = 0;
-    return getResult(initArray(array, noun, verb));
-}
-
-function initArray(array: number[], noun: number, verb: number): number[] {
-    array[1] = noun;
-    array[2] = verb;
-
-    return array;
-}
-
 function getResult(array: number[]): number {
     let operation: number[] = [];
-    let counter = 0;
+
     while ((operation = getOperation(array)) !== null)
         execute(array, operation);
 
@@ -38,6 +27,8 @@ function getOperation(array: number[]): number[] {
     switch (array[opCounter]) {
         case 1:
         case 2:
+        case 7:
+        case 8:
             result = [
                 array[opCounter++],
                 array[array[opCounter++]],
@@ -51,41 +42,49 @@ function getOperation(array: number[]): number[] {
         case 4:
             result = [array[opCounter++], array[array[opCounter++]]];
             break;
+        case 5:
+        case 6:
+            result = [
+                array[opCounter++],
+                array[array[opCounter++]],
+                array[array[opCounter++]],
+            ];
+            break;
         case 99:
             break;
         default:
-            let opCodeAsString = `${array[opCounter++]}`;
+            let opCodeAsString = `${array[opCounter++]}`.padStart(4, '0');
             let opCode = parseInt(opCodeAsString.slice(-2));
-
-            // change to boolean
-            let modeFirst =
-                opCodeAsString.slice(-3, -2) != ''
-                    ? parseInt(opCodeAsString.slice(-3, -2))
-                    : 0;
-            let modeSecond =
-                opCodeAsString.slice(-4, -3) != ''
-                    ? parseInt(opCodeAsString.slice(-4, -3))
-                    : 0;
-
+            let parameterModeFirst = !parseInt(opCodeAsString.slice(-3, -2));
+            let parameterModeSecond = !parseInt(opCodeAsString.slice(-4, -3));
             let first: number, second: number, third: number;
+
             switch (opCode) {
                 case 1:
                 case 2:
-                    first =
-                        modeFirst == 0
-                            ? array[array[opCounter++]]
-                            : array[opCounter++];
-                    second =
-                        modeSecond == 0
-                            ? array[array[opCounter++]]
-                            : array[opCounter++];
+                case 7:
+                case 8:
+                    first = parameterModeFirst
+                        ? array[array[opCounter++]]
+                        : array[opCounter++];
+                    second = parameterModeSecond
+                        ? array[array[opCounter++]]
+                        : array[opCounter++];
                     third = array[opCounter++];
                     break;
                 case 4:
-                    first =
-                        modeFirst == 0
-                            ? array[array[opCounter++]]
-                            : array[opCounter++];
+                    first = parameterModeFirst
+                        ? array[array[opCounter++]]
+                        : array[opCounter++];
+                    break;
+                case 5:
+                case 6:
+                    first = parameterModeFirst
+                        ? array[array[opCounter++]]
+                        : array[opCounter++];
+                    second = parameterModeSecond
+                        ? array[array[opCounter++]]
+                        : array[opCounter++];
                     break;
                 default:
                     throw new Error('error');
@@ -108,10 +107,22 @@ function execute(array: number[], operation: number[]): void {
             array[third] = first * second;
             break;
         case 3:
-            array[first] = inputParameter;
+            array[first] = parseInt(readLineSync.question('Input: '));
             break;
         case 4:
             console.log('Output:', first);
+            break;
+        case 5:
+            if (first != 0) opCounter = second;
+            break;
+        case 6:
+            if (first == 0) opCounter = second;
+            break;
+        case 7:
+            array[third] = first < second ? 1 : 0;
+            break;
+        case 8:
+            array[third] = first == second ? 1 : 0;
             break;
         default:
             throw new Error(opCode + ' unknown operation');
