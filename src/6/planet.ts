@@ -4,13 +4,29 @@ export class Planet {
 
     constructor(public name: string) {}
 
-    calculateOrbitingPlanets(): number {
-        let orbitingPlanets = 0;
+    calculateCenterPlanets(): number {
+        return this.getAllCenters().length;
+    }
+
+    getAllCenters(): Planet[] {
+        let orbitingPlanets: Planet[] = [];
         let tmpPlanet: Planet = this;
 
         while ((tmpPlanet = tmpPlanet.orbitingPlanet) != undefined)
-            orbitingPlanets++;
+            orbitingPlanets.push(tmpPlanet);
 
         return orbitingPlanets;
+    }
+
+    stepsTo(to: Planet): number {
+        let fromCenters = this.getAllCenters();
+        let toCenters = to.getAllCenters();
+
+        for (const planet of fromCenters) {
+            if (toCenters.includes(planet))
+                return fromCenters.indexOf(planet) + toCenters.indexOf(planet);
+        }
+
+        return -1;
     }
 }

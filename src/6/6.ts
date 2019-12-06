@@ -27,8 +27,14 @@ export async function main() {
     });
 
     let sum = [...Planet.planets.values()]
-        .map(planet => planet.calculateOrbitingPlanets())
+        .map(planet => planet.calculateCenterPlanets())
         .reduce((sum, planet) => sum + planet);
 
     console.log(`Part 1: ${sum}`);
+
+    console.log(
+        `Part 2: ${Planet.planets
+            .get('YOU')
+            .stepsTo(Planet.planets.get('SAN'))}`
+    );
 }
