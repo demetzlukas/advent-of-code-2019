@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
         "noImplicitAny": false,
-        "target": "ES2019",
+        "target": "es2016",
         "outDir": "./bin",
-        "sourceMap": true
+        "sourceMap": true,
+        "module": "commonjs",
+        "removeComments": true
     },
     "include": ["./src/**/*.ts"]
 }
