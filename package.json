@@ -2,12 +2,16 @@
     "name": "advent-of-code-2019",
     "version": "1.0.0",
     "description": "Advent of Code Challenge 2019",
-    "main": "index.js",
+    "main": "./bin/index.js",
     "scripts": {
         "start": "ts-node ./src/index.ts",
-        "run": "tsc && node -r esm ./bin/index.js"
+        "run": "tsc && node ./bin/index.js",
+        "debug": "tsc && node --inspect-brk=9229 ./bin/index.js"
     },
-    "keywords": [],
+    "keywords": [
+        "advent of code",
+        "typescript"
+    ],
     "author": "Lukas Demetz",
     "license": "ISC",
     "devDependencies": {
@@ -19,7 +23,6 @@
         "typescript": "^3.7.2"
     },
     "dependencies": {
-        "esm": "^3.2.25",
         "readline-sync": "^1.4.10",
         "request": "^2.88.0",
         "request-promise": "^4.2.5"
