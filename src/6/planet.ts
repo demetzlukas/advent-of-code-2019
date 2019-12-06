@@ -29,4 +29,15 @@ export class Planet {
 
         return -1;
     }
+
+    static getPlanet(name: string): Planet {
+        let planet = this.planets.get(name);
+
+        if (planet == undefined) {
+            planet = new Planet(name);
+            this.planets.set(name, planet);
+        }
+
+        return planet;
+    }
 }
