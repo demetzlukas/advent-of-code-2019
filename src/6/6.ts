@@ -23,7 +23,7 @@ export async function main() {
         let centerPlanet: Planet = getPlanet(center);
         let orbitingPlanet: Planet = getPlanet(orbiting);
 
-        orbitingPlanet.orbitingPlanet = centerPlanet;
+        orbitingPlanet.centerPlanet = centerPlanet;
     });
 
     let sum = [...Planet.planets.values()]
