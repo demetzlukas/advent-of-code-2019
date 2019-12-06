@@ -1,6 +1,6 @@
 export class Planet {
     static planets: Map<string, Planet> = new Map();
-    orbitingPlanet: Planet;
+    centerPlanet: Planet;
 
     constructor(public name: string) {}
 
@@ -9,13 +9,13 @@ export class Planet {
     }
 
     getAllCenters(): Planet[] {
-        let orbitingPlanets: Planet[] = [];
+        let centerPlanets: Planet[] = [];
         let tmpPlanet: Planet = this;
 
-        while ((tmpPlanet = tmpPlanet.orbitingPlanet) != undefined)
-            orbitingPlanets.push(tmpPlanet);
+        while ((tmpPlanet = tmpPlanet.centerPlanet) != undefined)
+            centerPlanets.push(tmpPlanet);
 
-        return orbitingPlanets;
+        return centerPlanets;
     }
 
     stepsTo(to: Planet): number {
