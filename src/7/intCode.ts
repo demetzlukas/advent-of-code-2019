@@ -1,7 +1,7 @@
 import * as readLineSync from 'readline-sync';
 
 export class IntCode {
-    operationCounter: number;
+    private operationCounter: number;
     done: boolean;
     output: number;
 
@@ -35,26 +35,28 @@ export class IntCode {
         let positionModeThird = !parseInt(opCodeAsString.slice(-5, -4));
 
         result.push(code);
-        // we always have at least one parameter
-        result.push(this.getParameterByMode(positionModeFirst));
 
         switch (code) {
             case 1:
             case 2:
             case 7:
             case 8:
+                result.push(this.getParameterByMode(positionModeFirst));
                 result.push(this.getParameterByMode(positionModeSecond));
                 result.push(this.getParameterByMode(positionModeThird));
                 break;
             case 3:
                 if (this.inputs.length == 0 && this.stopAndWait) {
-                    this.operationCounter -= 2;
-                    return null;
+                    this.operationCounter -= 1;
+                    result = null;
+                    break;
                 }
             case 4:
+                result.push(this.getParameterByMode(positionModeFirst));
                 break;
             case 5:
             case 6:
+                result.push(this.getParameterByMode(positionModeFirst));
                 result.push(this.getParameterByMode(positionModeSecond));
                 break;
             case 99:
@@ -86,20 +88,14 @@ export class IntCode {
                     this.operations[first] * this.operations[second];
                 break;
             case 3:
-                let input =
+                this.operations[first] =
                     this.inputs.length == 0
                         ? parseInt(readLineSync.question('Input: '))
                         : this.inputs.shift();
-                this.operations[first] = input;
                 break;
             case 4:
-                if (this.print) console.log('Output:', this.operations[first]);
-                // this.inputs = [
-                //     this.inputs[0],
-                //     this.operations[first],
-                //     ...this.inputs.slice(1),
-                // ];
                 this.output = this.operations[first];
+                if (this.print) console.log('Output:', this.output);
                 break;
             case 5:
                 if (this.operations[first] != 0)
