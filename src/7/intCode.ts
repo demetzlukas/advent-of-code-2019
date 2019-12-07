@@ -1,10 +1,7 @@
 import * as readLineSync from 'readline-sync';
 
 export class IntCode {
-    setInputs(tmp: any[]) {
-        this.inputs = tmp;
-    }
-    opCounter: number;
+    operationCounter: number;
     done: boolean;
     output: number;
 
@@ -14,7 +11,7 @@ export class IntCode {
         public print: boolean = true,
         public stopAndWait: boolean = false
     ) {
-        this.opCounter = 0;
+        this.operationCounter = 0;
         this.done = false;
         this.output = 0;
     }
@@ -30,18 +27,18 @@ export class IntCode {
 
     private getNextOperation(): number[] {
         let result: number[] = [];
-        let opCodeAsString = `${this.operations[this.opCounter++]}`;
+        let opCodeAsString = `${this.operations[this.operationCounter++]}`;
         opCodeAsString = opCodeAsString.padStart(5, '0');
-        let opCode = parseInt(opCodeAsString.slice(-2));
+        let code = parseInt(opCodeAsString.slice(-2));
         let positionModeFirst = !parseInt(opCodeAsString.slice(-3, -2));
         let positionModeSecond = !parseInt(opCodeAsString.slice(-4, -3));
         let positionModeThird = !parseInt(opCodeAsString.slice(-5, -4));
 
-        result.push(opCode);
+        result.push(code);
         // we always have at least one parameter
         result.push(this.getParameterByMode(positionModeFirst));
 
-        switch (opCode) {
+        switch (code) {
             case 1:
             case 2:
             case 7:
@@ -51,7 +48,7 @@ export class IntCode {
                 break;
             case 3:
                 if (this.inputs.length == 0 && this.stopAndWait) {
-                    this.opCounter -= 2;
+                    this.operationCounter -= 2;
                     return null;
                 }
             case 4:
@@ -65,7 +62,7 @@ export class IntCode {
                 this.done = true;
                 break;
             default:
-                throw new Error('Unknown op code ' + opCode);
+                throw new Error('Unknown op code ' + code);
         }
 
         return result;
@@ -73,13 +70,13 @@ export class IntCode {
 
     private getParameterByMode(positionMode: boolean): number {
         return positionMode
-            ? this.operations[this.opCounter++]
-            : this.opCounter++;
+            ? this.operations[this.operationCounter++]
+            : this.operationCounter++;
     }
 
     private execute(operation: number[]): void {
-        let [opCode, first, second, third] = operation;
-        switch (opCode) {
+        let [code, first, second, third] = operation;
+        switch (code) {
             case 1:
                 this.operations[third] =
                     this.operations[first] + this.operations[second];
@@ -106,11 +103,11 @@ export class IntCode {
                 break;
             case 5:
                 if (this.operations[first] != 0)
-                    this.opCounter = this.operations[second];
+                    this.operationCounter = this.operations[second];
                 break;
             case 6:
                 if (this.operations[first] == 0)
-                    this.opCounter = this.operations[second];
+                    this.operationCounter = this.operations[second];
                 break;
             case 7:
                 this.operations[third] =
@@ -121,7 +118,7 @@ export class IntCode {
                     this.operations[first] == this.operations[second] ? 1 : 0;
                 break;
             default:
-                throw new Error('Unknown op code ' + opCode);
+                throw new Error('Unknown op code ' + code);
         }
     }
 }
