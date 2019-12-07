@@ -1,18 +1,26 @@
 import * as readLineSync from 'readline-sync';
 
 export class IntCode {
+    setInputs(tmp: any[]) {
+        this.inputs = tmp;
+    }
     opCounter: number;
+    done: boolean;
+    output: number;
 
     constructor(
         public operations: number[],
         public inputs: number[] = [],
-        public print: boolean = true
+        public print: boolean = true,
+        public stopAndWait: boolean = false
     ) {
         this.opCounter = 0;
+        this.done = false;
+        this.output = 0;
     }
 
     start() {
-        let operation: number[] = [];
+        let operation: number[];
 
         while ((operation = this.getNextOperation()) !== null)
             this.execute(operation);
@@ -42,6 +50,10 @@ export class IntCode {
                 result.push(this.getParameterByMode(positionModeThird));
                 break;
             case 3:
+                if (this.inputs.length == 0 && this.stopAndWait) {
+                    this.opCounter -= 2;
+                    return null;
+                }
             case 4:
                 break;
             case 5:
@@ -50,6 +62,7 @@ export class IntCode {
                 break;
             case 99:
                 result = null;
+                this.done = true;
                 break;
             default:
                 throw new Error('Unknown op code ' + opCode);
@@ -84,11 +97,12 @@ export class IntCode {
                 break;
             case 4:
                 if (this.print) console.log('Output:', this.operations[first]);
-                this.inputs = [
-                    this.inputs[0],
-                    this.operations[first],
-                    ...this.inputs.slice(1),
-                ];
+                // this.inputs = [
+                //     this.inputs[0],
+                //     this.operations[first],
+                //     ...this.inputs.slice(1),
+                // ];
+                this.output = this.operations[first];
                 break;
             case 5:
                 if (this.operations[first] != 0)
