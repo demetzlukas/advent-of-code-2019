@@ -28,4 +28,7 @@ export async function main() {
         .reduce((sum, value) => sum + value);
 
     console.log(`Part 1: ${numberOfOnes * numberOfTwos}`);
+
+    console.log('Part 2:');
+    image.render();
 }
