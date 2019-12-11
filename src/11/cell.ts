@@ -25,7 +25,7 @@ export class Cell {
         this._color = initColor;
     }
 
-    getCoordinatesAsString(): string {
-        return `${this.x}x${this.y}`;
+    static getKeyFromCoordinates(x: number, y: number): string {
+        return `${x}x${y}`;
     }
 }

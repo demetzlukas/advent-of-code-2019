@@ -23,7 +23,10 @@ export class Painter {
         this.start = new Cell(0, 0, initColor);
         this.direction = Painter.UP;
         this.cells = new Map<string, Cell>();
-        this.cells.set(this.start.getCoordinatesAsString(), this.start);
+        this.cells.set(
+            Cell.getKeyFromCoordinates(this.start.x, this.start.y),
+            this.start
+        );
     }
 
     render() {
@@ -82,7 +85,7 @@ export class Painter {
                 throw new Error('Unknown direction ' + direction);
         }
 
-        let coordinatesAsString = `${x}x${y}`;
+        let coordinatesAsString = Cell.getKeyFromCoordinates(x, y);
         if (this.cells.get(coordinatesAsString) === undefined)
             this.cells.set(coordinatesAsString, new Cell(x, y));
 
@@ -96,7 +99,7 @@ export class Painter {
             .reduce((min, value) => (value < min ? value : min));
     }
 
-    paint() {
+    private getOffsetArray(): number[][] {
         let rowOffset = this.getOffset(Painter.ROW);
         let columnOffset = this.getOffset(Painter.COLUMN);
 
@@ -107,14 +110,25 @@ export class Painter {
             pixels[cell.x + rowOffset][cell.y + columnOffset] = cell.color;
         });
 
+        return pixels;
+    }
+
+    paint() {
+        let pixels = this.getOffsetArray();
+        pixels = this.replaceUndefinedValues(pixels);
+        pixels
+            .map(row => row.map(cell => (cell == 0 ? ' ' : '+')).join(''))
+            .forEach(row => console.log(row));
+    }
+
+    private replaceUndefinedValues(pixels: number[][]): number[][] {
         for (let row = 0; row < pixels.length; row++) {
             for (let column = 0; column < pixels[row].length; column++) {
                 pixels[row][column] =
                     pixels[row][column] === undefined ? 0 : pixels[row][column];
             }
         }
-        pixels
-            .map(row => row.map(cell => (cell == 0 ? ' ' : '+')).join(''))
-            .forEach(row => console.log(row));
+
+        return pixels;
     }
 }
