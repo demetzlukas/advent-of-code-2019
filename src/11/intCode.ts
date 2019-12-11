@@ -88,14 +88,16 @@ export class IntCode {
         }
     }
 
+    private checkOutOfBoundsValue(index: number) {
+        if (index !== undefined && index >= this.operations.length)
+            this.operations[index] = 0;
+    }
+
     private execute(operation: number[]): void {
         let [code, first, second, third] = operation;
-        if (first != undefined && first >= this.operations.length)
-            this.operations[first] = 0;
-        if (!second != undefined && second >= this.operations.length)
-            this.operations[second] = 0;
-        if (!third != undefined && third >= this.operations.length)
-            this.operations[third] = 0;
+        this.checkOutOfBoundsValue(first);
+        this.checkOutOfBoundsValue(second);
+        this.checkOutOfBoundsValue(third);
 
         switch (code) {
             case 1:
