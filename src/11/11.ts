@@ -1,5 +1,4 @@
 import { readFileFromInput } from '../utils/readFile';
-import { IntCode } from '../9/intCode';
 import { Painter } from './painter';
 import { Cell } from './cell';
 
