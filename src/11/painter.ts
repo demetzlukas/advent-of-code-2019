@@ -85,4 +85,32 @@ export class Painter {
 
         return this.cells.get(coordinatesAsString);
     }
+
+    paint() {
+        let rowOffset = [...this.cells.keys()]
+            .map(cell => cell.match(/(\d+)x(\d+)/)[1])
+            .map(cell => parseInt(cell))
+            .reduce((min, value) => (value < min ? value : min));
+        let columnOffset = [...this.cells.keys()]
+            .map(cell => cell.match(/(\d+)x(\d+)/)[2])
+            .map(cell => parseInt(cell))
+            .reduce((min, value) => (value < min ? value : min));
+
+        let pixels: number[][] = [];
+        [...this.cells.values()].forEach(cell => {
+            if (pixels[cell.x + rowOffset] == undefined)
+                pixels[cell.x + rowOffset] = [];
+            pixels[cell.x + rowOffset][cell.y + columnOffset] = cell.color;
+        });
+
+        for (let row = 0; row < pixels.length; row++) {
+            for (let column = 0; column < pixels[row].length; column++) {
+                pixels[row][column] =
+                    pixels[row][column] === undefined ? 0 : pixels[row][column];
+            }
+        }
+        pixels
+            .map(row => row.map(cell => (cell == 0 ? ' ' : '+')).join(''))
+            .forEach(row => console.log(row));
+    }
 }

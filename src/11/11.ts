@@ -12,4 +12,9 @@ export async function main() {
     let painter = new Painter(operations.slice());
     painter.render();
     console.log(`Part 1: ${Cell.numberOfVisitedCells}`);
+
+    painter = new Painter(operations.slice(), Painter.WHITE);
+    painter.render();
+    console.log('Part 2:');
+    painter.paint();
 }
