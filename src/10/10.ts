@@ -1,5 +1,6 @@
 import { readLinesFromInput } from '../utils/readFile';
 import { Astroid } from './astroid';
+import { Laser } from './laser';
 const fileName = './input/10.txt';
 
 export async function main() {
@@ -15,6 +16,12 @@ export async function main() {
             : max
     );
     console.log(
-        `Part 1: ${max.x}, ${max.y} sees ${max.calculateSeeingAstroids()}`
+        `Part 1: ${max.x}, ${
+            max.y
+        } sees ${max.calculateSeeingAstroids()} astroids.`
     );
+
+    let laser = new Laser(Astroid.astroids);
+    let destroyedPlaned = laser.getSequenceOfDestruction(max)[199];
+    console.log(`Part 2: ${destroyedPlaned.x * 100 + destroyedPlaned.y}`);
 }
