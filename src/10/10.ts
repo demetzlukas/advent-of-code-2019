@@ -22,6 +22,6 @@ export async function main() {
     );
 
     let laser = new Laser(Astroid.astroids);
-    let destroyedPlaned = laser.getSequenceOfDestruction(max)[199];
-    console.log(`Part 2: ${destroyedPlaned.x * 100 + destroyedPlaned.y}`);
+    let destroyedPlanet = laser.getSequenceOfDestruction(max)[199];
+    console.log(`Part 2: ${destroyedPlanet.x * 100 + destroyedPlanet.y}`);
 }
