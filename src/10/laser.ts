@@ -3,18 +3,22 @@ import { Astroid } from './astroid';
 export class Laser {
     constructor(public astroids: Astroid[]) {}
 
-    getSequenceOfDestruction(astroid: Astroid): Astroid[] {
+    getSequenceOfDestruction(baseAstroid: Astroid): Astroid[] {
         let astroids = this.astroids.slice();
-        astroids.splice(astroids.indexOf(astroid), 1);
+        astroids.splice(astroids.indexOf(baseAstroid), 1);
         let preSorted = astroids
-            .map(a => {
+            .map(astroid => {
                 return {
-                    astroid: a,
-                    angle: this.calculateAngle(astroid, a),
-                    distance: this.calculateDistance(astroid, a),
+                    astroid,
+                    angle: this.calculateAngle(baseAstroid, astroid),
+                    distance: this.calculateDistance(baseAstroid, astroid),
                 };
             })
-            .sort((a, b) => a.angle - b.angle);
+            .sort((a, b) =>
+                a.angle === b.angle
+                    ? a.distance - b.distance
+                    : a.angle - b.angle
+            );
         let maxDistance = preSorted
             .map(a => a.distance)
             .reduce((max, value) => (value > max ? value : max));
@@ -23,19 +27,16 @@ export class Laser {
 
         while (preSorted.length > 0) {
             let angle = preSorted[0].angle;
-            let i = 0;
+            let sameAngles = [];
 
-            while (i < preSorted.length) {
-                if (angle != preSorted[i].angle) break;
-                i++;
+            while (preSorted.length > 0) {
+                if (angle !== preSorted[0].angle) break;
+                sameAngles.push(preSorted.shift());
             }
 
-            let sameAngles = preSorted.splice(0, i);
-            sameAngles = sameAngles
-                .sort((a, b) => a.distance - b.distance)
-                .map((a, index) => {
-                    return { ...a, order: a.angle + index * maxDistance };
-                });
+            sameAngles = sameAngles.map((a, index) => {
+                return { ...a, order: a.angle + index * maxDistance };
+            });
 
             sorted = sorted.concat(sameAngles);
         }
@@ -44,17 +45,11 @@ export class Laser {
     }
 
     calculateAngle(start: Astroid, end: Astroid): number {
-        let [x1, y1] = [start.x, start.y];
-        let [x2, y2] = [end.x, end.y];
-
-        let theta = Math.atan2(x2 - x1, y1 - y2);
+        let theta = Math.atan2(end.x - start.x, start.y - end.y);
         return theta < 0 ? Math.PI + (Math.PI - Math.abs(theta)) : theta;
     }
 
     calculateDistance(start: Astroid, end: Astroid): number {
-        let [x1, y1] = [start.x, start.y];
-        let [x2, y2] = [end.x, end.y];
-
-        return (x1 - x2) ** 2 + (y1 - y2) ** 2;
+        return (start.x - end.x) ** 2 + (start.y - end.y) ** 2;
     }
 }
