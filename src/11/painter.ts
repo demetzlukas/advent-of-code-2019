@@ -10,6 +10,9 @@ export class Painter {
     static RIGHT = 2;
     static BLACK = 0;
     static WHITE = 1;
+    static ROW = 1;
+    static COLUMN = 2;
+
     direction: number;
     start: Cell;
     intCode: IntCode;
@@ -86,15 +89,16 @@ export class Painter {
         return this.cells.get(coordinatesAsString);
     }
 
+    private getOffset(orientation: number): number {
+        return [...this.cells.keys()]
+            .map(cell => cell.match(/(\d+)x(\d+)/)[orientation])
+            .map(cell => parseInt(cell))
+            .reduce((min, value) => (value < min ? value : min));
+    }
+
     paint() {
-        let rowOffset = [...this.cells.keys()]
-            .map(cell => cell.match(/(\d+)x(\d+)/)[1])
-            .map(cell => parseInt(cell))
-            .reduce((min, value) => (value < min ? value : min));
-        let columnOffset = [...this.cells.keys()]
-            .map(cell => cell.match(/(\d+)x(\d+)/)[2])
-            .map(cell => parseInt(cell))
-            .reduce((min, value) => (value < min ? value : min));
+        let rowOffset = this.getOffset(Painter.ROW);
+        let columnOffset = this.getOffset(Painter.COLUMN);
 
         let pixels: number[][] = [];
         [...this.cells.values()].forEach(cell => {
