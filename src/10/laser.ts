@@ -8,15 +8,16 @@ export class Laser {
         astroids.splice(astroids.indexOf(astroid), 1);
         let preSorted = astroids
             .map(a => {
-                let angle = this.calculateAngle(astroid, a);
-                let distance = this.calculateDistance(astroid, a);
                 return {
                     astroid: a,
-                    angle,
-                    distance,
+                    angle: this.calculateAngle(astroid, a),
+                    distance: this.calculateDistance(astroid, a),
                 };
             })
             .sort((a, b) => a.angle - b.angle);
+        let maxDistance = preSorted
+            .map(a => a.distance)
+            .reduce((max, value) => (value > max ? value : max));
 
         let sorted = [];
 
@@ -30,13 +31,16 @@ export class Laser {
             }
 
             let sameAngles = preSorted.splice(0, i);
+            sameAngles = sameAngles
+                .sort((a, b) => a.distance - b.distance)
+                .map((a, index) => {
+                    return { ...a, order: a.angle + index * maxDistance };
+                });
 
-            sameAngles = sameAngles.sort((a, b) => a.distance - b.distance);
-            sorted.push(sameAngles.shift().astroid);
-            if (sameAngles.length > 0) preSorted.concat(sameAngles);
+            sorted = sorted.concat(sameAngles);
         }
 
-        return sorted;
+        return sorted.sort((a, b) => a.order - b.order).map(a => a.astroid);
     }
 
     calculateAngle(start: Astroid, end: Astroid): number {
