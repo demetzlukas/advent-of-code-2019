@@ -54,4 +54,21 @@ export class Astroid {
             (x3 <= x2 && x2 <= x1 && y1 <= y2 && y2 <= y3)
         );
     }
+
+    calculateAngle(other: Astroid): number {
+        let theta = Math.atan2(this.x - other.x, other.y - this.y);
+        return theta < 0 ? Math.PI + (Math.PI - Math.abs(theta)) : theta;
+    }
+
+    calculateDistance(other: Astroid): number {
+        return (other.x - this.x) ** 2 + (other.y - this.y) ** 2;
+    }
+
+    getAngleAndDistance(other: Astroid) {
+        return {
+            astroid: this,
+            angle: this.calculateAngle(other),
+            distance: this.calculateDistance(other),
+        };
+    }
 }
