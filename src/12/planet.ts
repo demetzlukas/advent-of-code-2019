@@ -32,7 +32,7 @@ export class Planet {
 
     updatePosition() {
         for (let i = 0; i < this.position.length; i++) {
-            this.position[i] = this.position[i] + this.velocity[i];
+            this.position[i] += this.velocity[i];
         }
     }
 
