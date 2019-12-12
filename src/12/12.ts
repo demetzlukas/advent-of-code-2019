@@ -29,44 +29,24 @@ export async function main() {
 
 function step(planets: Planet[]) {
     planets.forEach(planet => {
-        planet.calculateVelocity(planets.slice());
+        planet.calculateVelocity(planets);
     });
     planets.forEach(planet => {
         planet.updatePosition();
     });
 }
 
-function movementLoop(positions: number[][], velocities: number[][]) {
-    positions.forEach((p1, i1) => {
-        positions.forEach(p2 => {
-            for (let j = 0; j < 3; j++) {
-                if (p1[j] > p2[j]) velocities[i1][j]--;
-                else if (p1[j] < p2[j]) velocities[i1][j]++;
-            }
-        });
-    });
-    for (let j = 0; j < positions.length; j++) {
-        for (let k = 0; k < 3; k++) {
-            positions[j][k] += velocities[j][k];
-        }
-    }
-}
-
 function stepsToReturn(planets: Planet[]): number {
-    let tmp = planets.slice();
-
-    const origins: number[][] = deepCopy(
-        tmp.map(planet => planet.initPosition)
-    );
-    const motionless: number[][] = tmp.map(x => [0, 0, 0]);
+    let origins = planets.map(planet => [...planet.initPosition]);
+    const motionless: number[][] = planets.map(x => [0, 0, 0]);
     const axisSteps: number[] = [0, 0, 0];
 
-    const positions: number[][] = deepCopy(origins);
-    const velocities: number[][] = deepCopy(motionless);
+    const positions: number[][] = planets.map(planet => planet.position);
+    const velocities: number[][] = planets.map(planet => planet.velocity);
     let steps: number = 0;
 
     while (axisSteps.indexOf(0) > -1) {
-        movementLoop(positions, velocities);
+        step(planets);
         steps++;
 
         for (let i = 0; i < axisSteps.length; i++) {

@@ -12,7 +12,6 @@ export class Planet {
     }
 
     calculateVelocity(planets: Planet[]) {
-        planets.splice(planets.indexOf(this), 1);
         let [px1, py1, pz1] = this.position;
         let [vx1, vy1, vz1] = this.velocity;
 
@@ -22,7 +21,9 @@ export class Planet {
             vy1 = this.getVelocity(py1, py2, vy1);
             vz1 = this.getVelocity(pz1, pz2, vz1);
 
-            this.velocity = [vx1, vy1, vz1];
+            this.velocity[0] = vx1;
+            this.velocity[1] = vy1;
+            this.velocity[2] = vz1;
         });
     }
 
