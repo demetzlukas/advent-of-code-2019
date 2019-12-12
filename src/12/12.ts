@@ -1,6 +1,5 @@
 import { readLinesFromInput } from '../utils/readFile';
 import { Planet } from '../12/planet';
-import { deepCopy } from '../utils/array';
 import { lcm } from '../utils/math';
 
 const fileName = './input/12.txt';
