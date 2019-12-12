@@ -1,4 +1,4 @@
-import { getSumOfAbsolutes } from '../utils/sum';
+import { getSumOfAbsolutes } from '../utils/math';
 
 export class Planet {
     velocity: number[];

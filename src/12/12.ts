@@ -1,5 +1,7 @@
 import { readLinesFromInput } from '../utils/readFile';
 import { Planet } from '../12/planet';
+import { deepCopy } from '../utils/array';
+import { lcm } from '../utils/math';
 
 const fileName = './input/12.txt';
 const regex = /<x=(-?\d+), y=(-?\d+), z=(-?\d+)>/;
@@ -50,12 +52,6 @@ function movementLoop(positions: number[][], velocities: number[][]) {
     }
 }
 
-function deepCopy(input: number[][]): number[][] {
-    return input.map(row => {
-        return [...row];
-    });
-}
-
 function stepsToReturn(planets: Planet[]): number {
     let tmp = planets.slice();
 
@@ -90,18 +86,4 @@ function sameOnAxis(axis: number, posArr1: number[][], posArr2: number[][]) {
         if (posArr1[i][axis] !== posArr2[i][axis]) return false;
     }
     return true;
-}
-
-function lcm(nums: number[]): number {
-    if (nums.length === 0) return 0;
-    let rVal = nums[0];
-    for (let i = 0; i < nums.length; i++) {
-        rVal = (rVal * nums[i]) / gcd(rVal, nums[i]);
-    }
-    return rVal;
-}
-
-function gcd(a: number, b: number): number {
-    if (b == 0) return a;
-    return gcd(b, a % b);
 }
