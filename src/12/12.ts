@@ -13,16 +13,95 @@ export async function main() {
 
     let steps = 0;
     while (steps++ < 1000) {
-        planets.forEach(planet => {
-            planet.calculateVelocity(planets.slice());
-        });
-        planets.forEach(planet => {
-            planet.updatePosition();
-        });
+        step(planets);
     }
+
     let totalEnergy = planets
         .map(planet => planet.calculateEnergy())
         .reduce((sum, value) => sum + value);
 
     console.log(`Part 1: ${totalEnergy}`);
+
+    console.log(`Part 2: ${stepsToReturn(planets.slice())}`);
+}
+
+function step(planets: Planet[]) {
+    planets.forEach(planet => {
+        planet.calculateVelocity(planets.slice());
+    });
+    planets.forEach(planet => {
+        planet.updatePosition();
+    });
+}
+
+function movementLoop(positions: number[][], velocities: number[][]) {
+    positions.forEach((p1, i1) => {
+        positions.forEach(p2 => {
+            for (let j = 0; j < 3; j++) {
+                if (p1[j] > p2[j]) velocities[i1][j]--;
+                else if (p1[j] < p2[j]) velocities[i1][j]++;
+            }
+        });
+    });
+    for (let j = 0; j < positions.length; j++) {
+        for (let k = 0; k < 3; k++) {
+            positions[j][k] += velocities[j][k];
+        }
+    }
+}
+
+function deepCopy(input: number[][]): number[][] {
+    return input.map(row => {
+        return [...row];
+    });
+}
+
+function stepsToReturn(planets: Planet[]): number {
+    let tmp = planets.slice();
+
+    const origins: number[][] = deepCopy(
+        tmp.map(planet => planet.initPosition)
+    );
+    const motionless: number[][] = tmp.map(x => [0, 0, 0]);
+    const axisSteps: number[] = [0, 0, 0];
+
+    const positions: number[][] = deepCopy(origins);
+    const velocities: number[][] = deepCopy(motionless);
+    let steps: number = 0;
+
+    while (axisSteps.indexOf(0) > -1) {
+        movementLoop(positions, velocities);
+        steps++;
+
+        for (let i = 0; i < axisSteps.length; i++) {
+            if (
+                axisSteps[i] === 0 &&
+                sameOnAxis(i, origins, positions) &&
+                sameOnAxis(i, motionless, velocities)
+            )
+                axisSteps[i] = steps;
+        }
+    }
+    return lcm(axisSteps);
+}
+
+function sameOnAxis(axis: number, posArr1: number[][], posArr2: number[][]) {
+    for (let i = 0; i < Math.min(posArr1.length, posArr2.length); i++) {
+        if (posArr1[i][axis] !== posArr2[i][axis]) return false;
+    }
+    return true;
+}
+
+function lcm(nums: number[]): number {
+    if (nums.length === 0) return 0;
+    let rVal = nums[0];
+    for (let i = 0; i < nums.length; i++) {
+        rVal = (rVal * nums[i]) / gcd(rVal, nums[i]);
+    }
+    return rVal;
+}
+
+function gcd(a: number, b: number): number {
+    if (b == 0) return a;
+    return gcd(b, a % b);
 }
