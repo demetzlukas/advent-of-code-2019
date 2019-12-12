@@ -37,13 +37,15 @@ export class Planet {
     }
 
     calculateEnergy(): number {
-        let pot = this.position
-            .map(value => Math.abs(value))
-            .reduce((sum, value) => sum + value);
-        let kin = this.velocity
-            .map(value => Math.abs(value))
-            .reduce((sum, value) => sum + value);
+        return (
+            this.getSumOfAbsolutes(this.position) *
+            this.getSumOfAbsolutes(this.velocity)
+        );
+    }
 
-        return pot * kin;
+    private getSumOfAbsolutes(array: number[]): number {
+        return array
+            .map(value => Math.abs(value))
+            .reduce((sum, value) => sum + value);
     }
 }
