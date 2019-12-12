@@ -1,3 +1,5 @@
+import { getSumOfAbsolutes } from '../utils/sum';
+
 export class Planet {
     velocity: number[];
     initPosition: number[];
@@ -38,14 +40,7 @@ export class Planet {
 
     calculateEnergy(): number {
         return (
-            this.getSumOfAbsolutes(this.position) *
-            this.getSumOfAbsolutes(this.velocity)
+            getSumOfAbsolutes(this.position) * getSumOfAbsolutes(this.velocity)
         );
-    }
-
-    private getSumOfAbsolutes(array: number[]): number {
-        return array
-            .map(value => Math.abs(value))
-            .reduce((sum, value) => sum + value);
     }
 }
