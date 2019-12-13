@@ -4,13 +4,21 @@ export class GameField {
     static BLOCK = 'X';
     static PADDLE = '-';
     static BALL = 'O';
+    score: number;
     field: string[][];
 
     constructor() {
         this.field = [];
     }
 
-    render(x: number, y: number, type: number) {
+    render(operations: number[]) {
+        while (operations.length > 0) {
+            let [x, y, type] = operations.splice(0, 3);
+            this.renderCell(x, y, type);
+        }
+    }
+
+    renderCell(x: number, y: number, type: number) {
         let row = this.field[y] || [];
         row[x] = this.getType(type);
         this.field[y] = row;
@@ -18,6 +26,16 @@ export class GameField {
 
     paint() {
         this.cleanField();
+        console.log(
+            'Score',
+            this.score,
+            'Blocks left',
+            this.getNumberOfType(GameField.BLOCK),
+            'Paddle',
+            this.getPositionOf(GameField.PADDLE),
+            'Ball',
+            this.getPositionOf(GameField.BALL)
+        );
         this.field.forEach(row => console.log(row.join('')));
     }
 
@@ -57,5 +75,12 @@ export class GameField {
             .reduce((sum, value) => sum + value);
     }
 
-    play() {}
+    getPositionOf(type: string): number[] {
+        for (let i = 0; i < this.field.length; i++) {
+            for (let j = 0; j < this.field[i].length; j++) {
+                const element = this.field[i][j];
+                if (element == type) return [i, j];
+            }
+        }
+    }
 }
