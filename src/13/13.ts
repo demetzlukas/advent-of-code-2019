@@ -8,7 +8,7 @@ export async function main() {
     let lines = await readFileFromInput(fileName);
     let operations: number[] = lines.split(',').map(Number);
 
-    let intCode = new IntCode(operations, [], false);
+    let intCode = new IntCode(operations.slice(), [], false);
     intCode.start();
     let gameField = new GameField();
     let output = intCode.output.slice();
@@ -19,10 +19,6 @@ export async function main() {
         let type = output.shift();
         gameField.render(x, y, type);
     }
-
-    let numberOfBlock = gameField.field
-        .map(row => row.filter(cell => cell === GameField.BLOCK).length)
-        .reduce((sum, value) => sum + value);
 
     console.log(`Part 1: ${gameField.getNumberOfType(GameField.BLOCK)}`);
 }
