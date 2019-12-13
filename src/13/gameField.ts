@@ -14,11 +14,13 @@ export class GameField {
     render(operations: number[]) {
         while (operations.length > 0) {
             let [x, y, type] = operations.splice(0, 3);
-            this.renderCell(x, y, type);
+
+            if (x == -1 && y == 0) this.score = type;
+            else this.renderCell(x, y, type);
         }
     }
 
-    renderCell(x: number, y: number, type: number) {
+    private renderCell(x: number, y: number, type: number) {
         let row = this.field[y] || [];
         row[x] = this.getType(type);
         this.field[y] = row;
