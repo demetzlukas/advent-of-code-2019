@@ -1,7 +1,6 @@
 import { readFileFromInput } from '../utils/readFile';
 import { IntCode } from '../11/intCode';
 import { GameField } from './gameField';
-import * as readLineSync from 'readline-sync';
 
 const fileName = './input/13.txt';
 
@@ -35,8 +34,6 @@ export async function main() {
             if (x == -1 && y == 0) gameField.score = type;
             else gameField.renderCell(x, y, type);
         }
-
-        // gameField.render(intCode.output);
 
         let ballY = gameField.getPositionOf(GameField.BALL)[1];
         let paddleY = gameField.getPositionOf(GameField.PADDLE)[1];
