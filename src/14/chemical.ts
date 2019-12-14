@@ -9,10 +9,10 @@ export class Chemical {
         this.fromChemicals.push([chemical, amount]);
     }
 
-    produce(): Map<Chemical, any> {
+    produce(amount: number = 1): Map<Chemical, any> {
         let map: Map<Chemical, any> = new Map<Chemical, any>();
         let obj = {};
-        obj[this.name] = 1;
+        obj[this.name] = amount;
         map.set(this, obj);
         this.getAmountToProduce(map);
 

@@ -42,5 +42,31 @@ export async function main() {
             sum += amount;
         }
     }
-    console.log(sum);
+    console.log(`Part 1: ${sum}`);
+
+    let step = 6200000;
+    let target = 1000000000000;
+
+    while (true) {
+        amountsForORE = chemicals
+            .get('FUEL')
+            .produce(step)
+            .get(chemicals.get('ORE'));
+
+        sum = 0;
+
+        for (const chem in amountsForORE) {
+            if (amountsForORE.hasOwnProperty(chem)) {
+                const amount = amountsForORE[chem];
+                sum += amount;
+            }
+        }
+
+        if (sum > target) {
+            break;
+        }
+        step++;
+    }
+
+    console.log(`Part 2: ${step - 1}`);
 }
