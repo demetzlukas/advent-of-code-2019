@@ -1,3 +1,5 @@
+import { sum } from '../utils/array';
+
 export class Chemical {
     fromChemicals: [Chemical, number][];
 
@@ -18,15 +20,12 @@ export class Chemical {
 
         return map;
     }
+
     private getAmountToProduce(map: Map<Chemical, any>) {
         let neededAmounts = map.get(this);
-        let sumOfAmounts = 0;
-
-        for (const key in neededAmounts) {
-            if (neededAmounts.hasOwnProperty(key)) {
-                sumOfAmounts += neededAmounts[key];
-            }
-        }
+        let sumOfAmounts = Object.keys(neededAmounts)
+            .map(chemical => neededAmounts[chemical])
+            .reduce(sum);
 
         this.fromChemicals.forEach(([chemical, amount]) => {
             let fraction = Math.ceil(sumOfAmounts / this.amount);

@@ -1,5 +1,6 @@
 import { readLinesFromInput } from '../utils/readFile';
 import { Chemical } from './chemical';
+import { sum } from '../utils/array';
 
 const fileName = './input/14.txt';
 const regex = /(\d+) ([A-Z]+)/;
@@ -34,39 +35,32 @@ export async function main() {
         .get('FUEL')
         .produce()
         .get(chemicals.get('ORE'));
-    let sum = 0;
 
-    for (const chem in amountsForORE) {
-        if (amountsForORE.hasOwnProperty(chem)) {
-            const amount = amountsForORE[chem];
-            sum += amount;
-        }
-    }
-    console.log(`Part 1: ${sum}`);
+    let totalAmount = Object.keys(amountsForORE)
+        .map(chemical => amountsForORE[chemical])
+        .reduce(sum);
 
-    let step = 6200000;
+    console.log(`Part 1: ${totalAmount}`);
+
+    let fuel = 6200000;
     let target = 1000000000000;
 
     while (true) {
         amountsForORE = chemicals
             .get('FUEL')
-            .produce(step)
+            .produce(fuel)
             .get(chemicals.get('ORE'));
 
-        sum = 0;
+        let totalAmount = Object.keys(amountsForORE)
+            .map(chemical => amountsForORE[chemical])
+            .reduce(sum);
 
-        for (const chem in amountsForORE) {
-            if (amountsForORE.hasOwnProperty(chem)) {
-                const amount = amountsForORE[chem];
-                sum += amount;
-            }
-        }
-
-        if (sum > target) {
+        if (totalAmount > target) {
+            fuel--;
             break;
         }
-        step++;
+        fuel++;
     }
 
-    console.log(`Part 2: ${step - 1}`);
+    console.log(`Part 2: ${fuel}`);
 }

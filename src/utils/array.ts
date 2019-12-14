@@ -3,3 +3,7 @@ export function deepCopy(input: any[][]): any[][] {
         return [...row];
     });
 }
+
+export function sum(sum: number, value: number): number {
+    return sum + value;
+}
