@@ -1,6 +1,7 @@
 import { readFileFromInput } from '../utils/readFile';
 import { IntCode } from '../11/intCode';
 import { Cell } from './cell';
+import { minimum } from '../utils/array';
 
 const fileName = './input/15.txt';
 const directions: number[] = [1, 2, 4, 3];
@@ -16,7 +17,8 @@ export async function main() {
     intCode = new IntCode(operations.slice(), [], false, true);
 
     step(1, visitedCells.get('0x0'));
-    console.log('paths', paths);
+    let min = paths.reduce(minimum);
+    console.log(`Part 1: ${min}`);
 }
 
 function step(steps: number, cell: Cell) {
