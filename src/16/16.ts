@@ -9,9 +9,10 @@ export async function main() {
     let basePattern: number[] = [0, 1, 0, -1];
 
     console.log(
-        `Part 1: ${calculateSignal(inputs.slice(), basePattern, 100)
-            .slice(0, 8)
-            .join('')}`
+        `Part 1: ${calculateSignal(inputs.slice(), basePattern, 100).substring(
+            0,
+            8
+        )}`
     );
 }
 
@@ -19,24 +20,25 @@ function calculateSignal(
     inputs: number[],
     basePattern: number[],
     upperBound: number
-): number[] {
+): string {
     let steps = 0;
     while (steps++ < upperBound) {
         let newInputs: number[] = [];
 
         inputs.forEach((number, index) => {
             let pattern: number[] = getPattern(basePattern, index);
-            let numbers: number[] = [];
+            let digit: number = 0;
 
-            inputs.forEach((number, index) =>
-                numbers.push(number * pattern[index % pattern.length])
-            );
-            newInputs.push(Math.abs(numbers.reduce(sum)) % 10);
+            inputs.forEach((number, index) => {
+                let result = number * pattern[index % pattern.length];
+                if (result !== 0) digit += result;
+            });
+            newInputs.push(Math.abs(digit) % 10);
         });
         inputs = newInputs;
     }
 
-    return inputs;
+    return inputs.join('');
 }
 
 function getPattern(basePattern: number[], index: number): number[] {
