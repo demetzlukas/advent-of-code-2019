@@ -21,34 +21,36 @@ function calculateSignal(
     upperBound: number
 ): number[] {
     let steps = 0;
-    let newInputs: number[] = [];
-    let pattern: number[] = [];
-    let numbers: number[] = [];
     while (steps++ < upperBound) {
-        newInputs = [];
-        pattern = basePattern.slice();
+        let newInputs: number[] = [];
 
         inputs.forEach((number, index) => {
-            if (index > 0) {
-                pattern = [];
+            let pattern: number[] = getPattern(basePattern, index);
+            let numbers: number[] = [];
 
-                basePattern.forEach(p => {
-                    let repeat = 0;
-                    while (repeat++ < index + 1) {
-                        pattern.push(p);
-                    }
-                });
-            }
-
-            numbers = [];
-            pattern.push(pattern.shift());
             inputs.forEach((number, index) =>
                 numbers.push(number * pattern[index % pattern.length])
             );
             newInputs.push(Math.abs(numbers.reduce(sum)) % 10);
         });
-        inputs = [...newInputs];
+        inputs = newInputs;
     }
 
-    return newInputs;
+    return inputs;
+}
+
+function getPattern(basePattern: number[], index: number): number[] {
+    let pattern: number[] = [];
+    if (index == 0) pattern = basePattern.slice();
+    else {
+        basePattern.forEach(p => {
+            let repeat = 0;
+            while (repeat++ < index + 1) {
+                pattern.push(p);
+            }
+        });
+    }
+
+    pattern.push(pattern.shift());
+    return pattern;
 }
