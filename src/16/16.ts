@@ -1,5 +1,4 @@
 import { readFileFromInput } from '../utils/readFile';
-import { sum } from '../utils/array';
 
 const fileName = './input/16.txt';
 
@@ -25,14 +24,14 @@ function calculateSignal(
     while (steps++ < upperBound) {
         let newInputs: number[] = [];
 
-        inputs.forEach((number, index) => {
+        inputs.forEach((_, index) => {
             let pattern: number[] = getPattern(basePattern, index);
             let digit: number = 0;
 
-            inputs.forEach((number, index) => {
-                let result = number * pattern[index % pattern.length];
-                if (result !== 0) digit += result;
-            });
+            inputs.forEach(
+                (number, index) =>
+                    (digit += number * pattern[index % pattern.length])
+            );
             newInputs.push(Math.abs(digit) % 10);
         });
         inputs = newInputs;
